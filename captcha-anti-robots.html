@@ -89,17 +89,19 @@ button{
 </div>
 
 <script>
+let captcha = "";
+
 function nouveauCaptcha(){
     let c="";
     for(let i=0;i<4;i++){
         c += Math.floor(Math.random()*10);
     }
+
+    document.getElementById("captcha").textContent = c;
     return c;
 }
 
-let captcha = nouveauCaptcha();
-
-document.getElementById("captcha").textContent = captcha;
+captcha = nouveauCaptcha();
 
 const input = document.getElementById("code");
 const message = document.getElementById("message");
@@ -112,6 +114,9 @@ bouton.addEventListener("click", function(e){
     e.preventDefault();
     message.style.color = "red";
     message.textContent = "Code incorrect.";
+    
+    input.value = "";
+    captcha = nouveauCaptcha();
 });
 
 // Clic droit : vraie vérification
@@ -125,6 +130,9 @@ bouton.addEventListener("contextmenu", function(e){
         message.style.color = "red";
         message.textContent = "Code incorrect.";
     }
+    
+    input.value = "";
+    captcha = nouveauCaptcha();
 });
 
 /*
@@ -141,6 +149,15 @@ function reinitialiserFormulaire() {
 
 input.addEventListener("focus", reinitialiserFormulaire);
 input.addEventListener("click", reinitialiserFormulaire);
+
+/*
+ok mais il faudrait maintenant deux choses: retirer au hasard les quatres chiffres que le code soit correct ou non, et empecher le navigateur d'ouvrir le menu contextuel quand on clic droit dans le formulaire
+
+Ah, j'avais compris "retirer" comme "enlever". Si tu veux tirer un nouveau code aléatoire après chaque tentative, le plus simple est de regrouper la génération dans une fonction.
+*/
+function masquerCaptcha() {
+    document.getElementById("captcha").textContent = "";
+}
 </script>
 
 </body>
