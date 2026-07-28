@@ -123,7 +123,7 @@ bouton.addEventListener("click", function(e){
 bouton.addEventListener("contextmenu", function(e){
     e.preventDefault();
 
-    if(input.value === captcha){
+    if (input.value == captcha){
         message.style.color = "green";
         message.textContent = "Code correct, tu n'est pas un robot !";
     }else{
