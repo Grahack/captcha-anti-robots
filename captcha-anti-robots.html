@@ -126,6 +126,21 @@ bouton.addEventListener("contextmenu", function(e){
         message.textContent = "Code incorrect.";
     }
 });
+
+/*
+c'est très bien mais je voudrais que le formulaire se vide et que "code incorrect" disparaisse dans on clique dans le formulaire
+
+Il suffit d'ajouter un gestionnaire sur le champ de saisie qui efface son contenu et le message dès qu'on clique dedans.
+
+Ajoute ce code à la fin du <script> :
+*/
+function reinitialiserFormulaire() {
+    input.value = "";
+    message.textContent = "";
+}
+
+input.addEventListener("focus", reinitialiserFormulaire);
+input.addEventListener("click", reinitialiserFormulaire);
 </script>
 
 </body>
