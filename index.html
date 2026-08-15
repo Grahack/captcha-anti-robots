@@ -109,30 +109,28 @@ const bouton = document.getElementById("valider");
 
 // Pas de focus automatique volontaire.
 
-// Clic gauche : toujours faux
-bouton.addEventListener("click", function(e){
-    e.preventDefault();
-    message.style.color = "red";
-    message.textContent = "Code incorrect.";
-    
-    input.value = "";
-    captcha = nouveauCaptcha();
-});
-
-// Clic droit : vraie vérification
-bouton.addEventListener("contextmenu", function(e){
-    e.preventDefault();
-
-    if (input.value == captcha){
+function verif(droit) {
+    if (droit && input.value == captcha) {
         message.style.color = "green";
         message.textContent = "Code correct, tu n'est pas un robot !";
     } else {
         message.style.color = "red";
         message.textContent = "Code incorrect.";
     }
-    
     input.value = "";
     captcha = nouveauCaptcha();
+}
+
+// Clic gauche : toujours faux
+bouton.addEventListener("click", function(e){
+    e.preventDefault();
+    verif(false);
+});
+
+// Clic droit : vraie vérification
+bouton.addEventListener("contextmenu", function(e){
+    e.preventDefault();
+    verif(true);
 });
 
 /*
