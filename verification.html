@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Tu es un robot, MdP?</title>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#f2f2f2;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.box{
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,.2);
+    text-align:center;
+    width:320px;
+}
+
+input{
+    font-size:22px;
+    text-align:center;
+    padding:8px;
+    width:150px;
+}
+
+button{
+    margin-top:15px;
+    padding:10px 25px;
+    font-size:18px;
+    cursor:pointer;
+}
+
+#message{
+    margin-top:20px;
+    font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Mot de passe ?</h2>
+    <p>Tu es un robot, mais es-tu LE robot ?</p>
+    <input
+        id="code"
+        type="text"
+        maxlength="8"
+        placeholder="MdP">
+
+    <br>
+
+    <button id="valider">Valider</button>
+
+    <div id="message"></div>
+</div>
+
+<script>
+const input = document.getElementById("code");
+const bouton = document.getElementById("valider");
+const message = document.getElementById("message");
+
+// Pas de focus automatique volontaire.
+
+function verif() {
+    if (input.value == "21081940") {
+        message.style.color = "green";
+        let msg = "Code correct, tu es LE robot !";
+        msg += "</br>Suis ";
+        msg += '<a href="communication.html">ce lien</a>.';
+        message.innerHTML = msg;
+    } else {
+        message.style.color = "red";
+        message.innerHTML = "Code incorrect.";
+    }
+    input.value = "";
+}
+
+// Clic gauche : toujours faux
+bouton.addEventListener("click", function(e){
+    e.preventDefault();
+    verif();
+});
+
+// Clic droit : vraie vérification
+bouton.addEventListener("contextmenu", function(e){
+    e.preventDefault();
+    verif();
+});
+
+function reinitialiserFormulaire() {
+    input.value = "";
+    message.textContent = "";
+}
+
+input.addEventListener("focus", reinitialiserFormulaire);
+input.addEventListener("click", reinitialiserFormulaire);
+
+</script>
+
+</body>
+</html>

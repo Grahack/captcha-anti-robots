@@ -90,6 +90,7 @@ button{
 
 <script>
 let captcha = "";
+let attempts = 0;
 
 function nouveauCaptcha(){
     let c="";
@@ -104,18 +105,28 @@ function nouveauCaptcha(){
 captcha = nouveauCaptcha();
 
 const input = document.getElementById("code");
-const message = document.getElementById("message");
 const bouton = document.getElementById("valider");
+const message = document.getElementById("message");
 
 // Pas de focus automatique volontaire.
 
 function verif(droit) {
+    attempts++;
     if (droit && input.value == captcha) {
         message.style.color = "green";
         message.textContent = "Code correct, tu n'est pas un robot !";
     } else {
         message.style.color = "red";
-        message.textContent = "Code incorrect.";
+        let msg = "Code incorrect. ";
+        msg += attempts + " tentative" + (attempts>1?"s":"") + ".";
+        if (attempts==3) msg += "</br>Au bout de 5…";
+        if (attempts==5) msg += "</br>Serais-tu un robot? Essaie encore.";
+        if (attempts==10) {
+            msg += "</br>Difficile de douter maintenant.";
+            msg += "</br>Tu es un robot, suis ";
+            msg += '<a href="verification.html">ce lien</a>.';
+        }
+        message.innerHTML = msg;
     }
     input.value = "";
     captcha = nouveauCaptcha();
