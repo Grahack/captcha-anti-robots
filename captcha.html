@@ -72,7 +72,7 @@ button{
 
 <div class="box">
     <h2>Vérification</h2>
-
+    <p>Es-tu bien un humain ?<br>Recopie le code ci-dessous.</p>
     <div id="captcha"></div>
 
     <input
@@ -119,12 +119,12 @@ function verif(droit) {
         message.style.color = "red";
         let msg = "Code incorrect. ";
         msg += attempts + " tentative" + (attempts>1?"s":"") + ".";
-        if (attempts==3) msg += "</br>Au bout de 5…";
-        if (attempts==5) msg += "</br>Serais-tu un robot? Essaie encore.";
-        if (attempts==10) {
+        if (attempts==2) msg += "</br>Au bout de 3…";
+        if (attempts==3) msg += "</br>Serais-tu un robot? Essaie encore.";
+        if (attempts==5) {
             msg += "</br>Difficile de douter maintenant.";
             msg += "</br>Tu es un robot, suis ";
-            msg += '<a href="verification.html">ce lien</a>.';
+            msg += '<a href="communication.html">ce lien</a>.';
         }
         message.innerHTML = msg;
     }
