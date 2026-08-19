@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<!--
+il me faut une page html avec un faux captcha: quatre chiffres s'affichent au hasard, qu'il faut recopier et valider dans une case en dessous, sauf qu'il y a une ruse: le focus n'est pas dans le formulaire par défaut, il faut toujours cliquer dedans. Si on clique gauche le formulaire dira que le code n'est pas bon (pas de controle: toujours faux) mais si on clique droit, le code est vérifié normalement
+
+Voici un exemple autonome en HTML/CSS/JavaScript qui fait exactement ce que tu décris, pour un usage de démonstration ou de jeu :
+
+4 chiffres aléatoires sont affichés.
+Il faut les recopier dans le champ.
+Le champ n'a pas automatiquement le focus (il faut cliquer dedans).
+Clic gauche sur le bouton Valider → affiche toujours "Code incorrect." (sans même vérifier).
+Clic droit sur le bouton → empêche le menu contextuel, vérifie réellement le code et affiche le résultat.
+
+[code]
+
+Avec ce comportement, un utilisateur qui utilise normalement le bouton (clic gauche) échoue systématiquement, tandis qu'un clic droit déclenche la véritable validation. Le champ ne reçoit pas le focus automatiquement au chargement, ce qui oblige également à cliquer dedans avant de pouvoir saisir le code.
+-->
+
+<head>
+<meta charset="UTF-8">
+<title>Test qui te confirme que tu n'es pas un robot</title>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#f2f2f2;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.box{
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,.2);
+    text-align:center;
+    width:320px;
+}
+
+#captcha{
+    font-size:40px;
+    font-weight:bold;
+    letter-spacing:10px;
+    margin:20px;
+    user-select:none;
+}
+
+input{
+    font-size:22px;
+    text-align:center;
+    padding:8px;
+    width:150px;
+}
+
+button{
+    margin-top:15px;
+    padding:10px 25px;
+    font-size:18px;
+    cursor:pointer;
+}
+
+#message{
+    margin-top:20px;
+    font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Vérification</h2>
+
+    <div id="captcha"></div>
+
+    <input
+        id="code"
+        type="text"
+        maxlength="4"
+        placeholder="Code">
+
+    <br>
+
+    <button id="valider">Valider</button>
+
+    <div id="message"></div>
+</div>
+
+<script>
+let captcha = "";
+let attempts = 0;
+
+function nouveauCaptcha(){
+    let c="";
+    for(let i=0;i<4;i++){
+        c += Math.floor(Math.random()*10);
+    }
+
+    document.getElementById("captcha").textContent = c;
+    return c;
+}
+
+captcha = nouveauCaptcha();
+
+const input = document.getElementById("code");
+const bouton = document.getElementById("valider");
+const message = document.getElementById("message");
+
+// Pas de focus automatique volontaire.
+
+function verif(droit) {
+    attempts++;
+    if (droit && input.value == captcha) {
+        message.style.color = "green";
+        message.textContent = "Code correct, tu n'est pas un robot !";
+    } else {
+        message.style.color = "red";
+        let msg = "Code incorrect. ";
+        msg += attempts + " tentative" + (attempts>1?"s":"") + ".";
+        if (attempts==3) msg += "</br>Au bout de 5…";
+        if (attempts==5) msg += "</br>Serais-tu un robot? Essaie encore.";
+        if (attempts==10) {
+            msg += "</br>Difficile de douter maintenant.";
+            msg += "</br>Tu es un robot, suis ";
+            msg += '<a href="verification.html">ce lien</a>.';
+        }
+        message.innerHTML = msg;
+    }
+    input.value = "";
+    captcha = nouveauCaptcha();
+}
+
+// Clic gauche : toujours faux
+bouton.addEventListener("click", function(e){
+    e.preventDefault();
+    verif(false);
+});
+
+// Clic droit : vraie vérification
+bouton.addEventListener("contextmenu", function(e){
+    e.preventDefault();
+    verif(true);
+});
+
+/*
+c'est très bien mais je voudrais que le formulaire se vide et que "code incorrect" disparaisse dans on clique dans le formulaire
+
+Il suffit d'ajouter un gestionnaire sur le champ de saisie qui efface son contenu et le message dès qu'on clique dedans.
+
+Ajoute ce code à la fin du <script> :
+*/
+function reinitialiserFormulaire() {
+    input.value = "";
+    message.textContent = "";
+}
+
+input.addEventListener("focus", reinitialiserFormulaire);
+input.addEventListener("click", reinitialiserFormulaire);
+
+/*
+ok mais il faudrait maintenant deux choses: retirer au hasard les quatres chiffres que le code soit correct ou non, et empecher le navigateur d'ouvrir le menu contextuel quand on clic droit dans le formulaire
+
+Ah, j'avais compris "retirer" comme "enlever". Si tu veux tirer un nouveau code aléatoire après chaque tentative, le plus simple est de regrouper la génération dans une fonction.
+*/
+function masquerCaptcha() {
+    document.getElementById("captcha").textContent = "";
+}
+</script>
+
+</body>
+</html>
